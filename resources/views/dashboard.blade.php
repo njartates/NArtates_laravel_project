@@ -18,13 +18,21 @@
     <div class="py-12">
         <div class="max-w-7xl mx auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hiden shadow-sm sm:rounded-lg p-6">
+                <div class="mb-6">
+                   
 
 <!--add student form-->
-        <div class="mb-6">
+        <div class="mb-6"> 
+            @if(session('success'))
+                    <strong class="font-bold">{{ session ('success' )}}</strong>
+                    <span class="block sm:inline">Student has been added successfully.</span>
+                </div>
+            @endif
             <h3 class="text-lg font-medium mb-4"> Add New Student </h3>
-            <form method="post" action="#">
+            <form method="POST" action="{{ route ('student.store') }}">
                     @csrf 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
                     <div>
                         <label for="name" class="block text-gray-700">Name </label>
                         <input type="text" id="name" name="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
@@ -64,19 +72,26 @@
                 <th class="py-2 border-b">Action</th>
 </tr>
 </thead>
-<tbody>
+<tbody id="student-table">
+    @foreach ($students as $key => $student)
 
+   
 <tr> 
-    <td class="py-2 border-b px-4">1</td>
-    <td class="py-2 border-b px-4">John Doe</td>
-    <td class="py-2 border-b px-4">Johndoe@example.com</td>
-    <td class="py-2 border-b px-4">123-456-7890</td>
-    <td class="py-2 border-b px-4">123 Main st</td>
+    <td class="py-2 border-b px-4">{{ $key + 1 }}</td>
+    <td class="py-2 border-b px-4">{{ $student->name }}</td>
+    <td class="py-2 border-b px-4">{{ $student->email }}</td>
+    <td class="py-2 border-b px-4">{{ $student->phone }}</td>
+    <td class="py-2 border-b px-4">{{ $student->address }}</td>
     <td class="py-2 border-b px-4">
-        <a href="#" class="text-blue-500 hover:text-blue-700">Edit</a>
-        <a href="#" class="text-red-500 hover:text-red-700">Delete</a>
+        <a href="#" class="text-blue-500 hover:text-blue-700">Edit</a> |
+        <form method="POST" action="{{ route('student.destroy', $student->id) }}" style="display:inline;">
+            @csrf 
+            @method('DELETE')
+        <button type="submit" class ="text-red-500 hover:text-red-700">Delete</button>
+</form>
 </td>
 </tr>
+@endforeach
 </tbody>
 </table>
 </div>
